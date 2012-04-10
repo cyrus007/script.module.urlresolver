@@ -21,13 +21,10 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import urllib2
+import re, urllib2
 from urlresolver import common
 from lib import jsunpack
 import xbmcgui
-
-# Custom imports
-import re
 
 
 class FileboxResolver(Plugin, UrlResolver, PluginSettings):
@@ -66,7 +63,7 @@ class FileboxResolver(Plugin, UrlResolver, PluginSettings):
 
 
         except urllib2.URLError, e:
-            common.addon.log_error('gorillavid: got http error %d fetching %s' %
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                   (e.code, web_url))
             return False
 

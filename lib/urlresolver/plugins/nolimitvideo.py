@@ -20,8 +20,7 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
-import urllib2
+import re, urllib2
 from urlresolver import common
 
 class nolimitvideoResolver(Plugin, UrlResolver, PluginSettings):
@@ -67,6 +66,5 @@ class nolimitvideoResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match('http://(www)?.nolimitvideo.com/video/[0-9a-f]+/', 
-                        url) or 'nolimitvideo' in host
+        return re.match('http://(www)?.nolimitvideo.com/video/[0-9a-f]+/', url) or self.name in host
 

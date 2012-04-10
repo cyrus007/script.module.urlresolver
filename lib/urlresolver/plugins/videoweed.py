@@ -16,9 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import re
+import re, urllib2
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
@@ -90,5 +89,5 @@ class VideoweedResolver(Plugin, UrlResolver, PluginSettings):
 
     def valid_url(self, url, host):
         return re.match('http://(www.|embed.)?videoweed.(?:es|com)/(video/|embed.php\?)' +
-                        '(?:[0-9a-z]+|width)', url) or 'videoweed' in host
+                        '(?:[0-9a-z]+|width)', url) or self.name in host
 

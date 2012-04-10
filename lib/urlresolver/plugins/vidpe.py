@@ -16,9 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import re
+import re, urllib2
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
@@ -28,6 +27,7 @@ from vidxden import unpack_js
 
 class vidpeResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
+    name = "vidpe/hostingcup/hostingbulk"
 
     def __init__(self):
         p = self.get_setting('priority') or 100
@@ -66,7 +66,7 @@ class vidpeResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def get_url(self, host, media_id):
-        if 'vidpe' in host or 'hostingcup' in host:
+        if 'vidpe' in host or 'hostingcup' in host or 'hostingbulk' in host:
             return 'http://'+host+'/%s.html' % media_id
         else:
             return 'http://'+host+'/%s' % media_id

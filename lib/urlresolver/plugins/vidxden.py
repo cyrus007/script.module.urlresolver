@@ -24,8 +24,7 @@ In testing there seems to be a timing issue with files coming up as not playable
 This happens on both the addon and in a browser.
 """
 
-import re
-import urllib2
+import re, urllib2
 from t0mm0.common.net import Net
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
@@ -34,7 +33,7 @@ from urlresolver.plugnplay import Plugin
 
 class VidxdenResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
-    name = "vidxden"
+    name = "vidxden/divxden/vidbux"
 
     def __init__(self):
         p = self.get_setting('priority') or 100
@@ -56,7 +55,7 @@ class VidxdenResolver(Plugin, UrlResolver, PluginSettings):
             html = self.net.http_POST(post_url, form_data=form_values).content
 
         except urllib2.URLError, e:
-            common.addon.log_error('vidxden: got http error %d fetching %s' %
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                   (e.code, web_url))
             return False
         
@@ -65,7 +64,7 @@ class VidxdenResolver(Plugin, UrlResolver, PluginSettings):
         if r:
             p, k = r.groups()
         else:
-            common.addon.log_error('vidxden: packed javascript embed code not found')
+            common.addon.log_error(self.name + ': packed javascript embed code not found')
 
         decrypted_data = unpack_js(p, k)
         
@@ -76,18 +75,17 @@ class VidxdenResolver(Plugin, UrlResolver, PluginSettings):
         if r:
             stream_url = r.group(1)
         else:
-            common.addon.log_error('vidxden: stream url not found')
+            common.addon.log_error(self.name + ': stream url not found')
             return False
 
         return stream_url
 
         
     def get_url(self, host, media_id):
-        if 'vidbux' in host:
-            host = 'www.vidbux.com'
+        if 'vidbux' in host or 'divxden' in host or 'vidxden' in host:
+            return 'http://www.%s.com/%s' % (host, media_id)
         else:
-            host = 'www.vidxden.com'
-        return 'http://%s/%s' % (host, media_id)
+            return False
         
         
     def get_host_and_id(self, url):
@@ -99,10 +97,8 @@ class VidxdenResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return (re.match('http://(?:www.)?(vidxden|divxden|vidbux).com/' +
-                         '(embed-)?[0-9a-z]+', url) or
-                'vidxden' in host or 'divxden' in host or
-                'vidbux' in host)
+        return (re.match('http://(?:www.)?(vidxden|divxden|vidbux).com/(embed-)?[0-9a-z]+', url) or
+                'vidxden' in host or 'divxden' in host or 'vidbux' in host)
         
         
 def unpack_js(p, k):

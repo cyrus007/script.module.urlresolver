@@ -56,7 +56,6 @@ class MegavideoResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match('http://(www.)?megavideo.com/(v/|\?v=)[0-9A-Z]+', 
-                        url) or 'megavideo' in host
+        return re.match('http://(www.)?megavideo.com/(v/|\?v=)[0-9A-Z]+', url) or self.name in host
 
 

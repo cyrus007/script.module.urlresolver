@@ -16,10 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os, sys
-import random
-import re
-import urllib, urllib2
+import os, sys, random, re
+import urllib
 
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import SiteAuth
@@ -123,25 +121,21 @@ class RealDebridResolver(Plugin, UrlResolver, SiteAuth, PluginSettings):
         return self.allHosters 
 
     def valid_url(self, url, host):
-
-        if self.get_setting('login') == 'false':
+        login = self.get_setting('login')
+        if login == 'false' or login == '':
             return False
-        print 'in valid_url %s : %s' % (url, host)
+        print self.name + ': in valid_url %s : %s' % (url, host)
+        domain = 'FALSE'
         tmp = re.compile('//(.+?)/').findall(url)
-        domain = ''
-        if len(tmp) > 0 :
+        if len(tmp) > 0:
             domain = tmp[0].replace('www.', '')
-            if 'megashares' in domain:
-                domain = 'megashares.com'
-            elif 'megashare' in domain:
-                domain = 'megashare.com'
-            print 'domain is %s ' % domain
+            print self.name + ': domain is %s ' % domain
         if (domain in self.get_all_hosters()) or (len(host) > 0 and host in self.get_all_hosters()):
             return True
         else:
             return False
 
-    def  checkLogin(self):
+    def checkLogin(self):
         url = 'http://real-debrid.com/lib/api/account.php'
         if not os.path.exists(self.cookie_file):
                return True
@@ -193,5 +187,4 @@ class RealDebridResolver(Plugin, UrlResolver, SiteAuth, PluginSettings):
         
     #to indicate if this is a universal resolver
     def isUniversal(self):
-        
         return True

@@ -18,7 +18,6 @@
 
 import re
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
@@ -34,14 +33,11 @@ class VimeoResolver(Plugin, UrlResolver, PluginSettings):
 
     def get_media_url(self, host, media_id):
         #just call vimeo addon
-        plugin = 'plugin://plugin.video.vimeo/?action=play_video&videoid=' +\
-                 media_id
+        plugin = 'plugin://plugin.video.vimeo/?action=play_video&videoid=' + media_id
         return plugin
-
 
     def get_url(self, host, media_id):
         return 'http://vimeo.com/%s' % media_id
-
 
     def get_host_and_id(self, url):
         r = re.findall('/([0-9]+)', url)
@@ -50,13 +46,11 @@ class VimeoResolver(Plugin, UrlResolver, PluginSettings):
         if video_id:
             return ('vimeo.com', video_id)
         else:
-            common.addon.log_error('vimeo: video id not found')
+            common.addon.log_error(self.name + ': video id not found')
             return False
 
-
     def valid_url(self, url, host):
-        return re.match('http://(.+)?vimeo.com/[0-9]+',
-                        url) or 'vimeo' in host
+        return re.match('http://(.+)?vimeo.com/[0-9]+', url) or self.name in host
 
     def get_settings_xml(self):
         xml = PluginSettings.get_settings_xml(self)

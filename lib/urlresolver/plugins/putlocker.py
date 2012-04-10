@@ -16,9 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import re
+import re, urllib2
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
@@ -102,8 +101,7 @@ class PutlockerResolver(Plugin, UrlResolver, PluginSettings):
             return False
         
     def valid_url(self, url, host):
-        return (re.match('http://(www.)?(putlocker|sockshare).com/' + 
-                         '(file|embed)/[0-9A-Z]+', url) or
+        return (re.match('http://(www.)?(putlocker|sockshare).com/(file|embed)/[0-9A-Z]+', url) or
                 'putlocker' in host or 'sockshare' in host)
                  
 

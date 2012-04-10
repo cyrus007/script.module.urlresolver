@@ -16,11 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os
-import random
-import re
-import urllib2
-
+import os, random, re, urllib2
 from lib import _megaupload
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import SiteAuth
@@ -73,8 +69,7 @@ class MegaUploadResolver(Plugin, UrlResolver, SiteAuth, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return (re.match('http://(www.)?megaupload.com/\?d=' + 
-                        '([0-9A-Z]+)', url) or 'megaupload' in host)
+        return (re.match('http://(www.)?megaupload.com/\?d=([0-9A-Z]+)', url) or self.name in host)
     
     #SiteAuth methods
     def login(self):

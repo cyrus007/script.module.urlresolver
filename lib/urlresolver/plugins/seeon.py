@@ -1,7 +1,5 @@
-import random
-import re
+import re, random, urllib2
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
@@ -50,6 +48,5 @@ class SeeonResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match('http://(www.)?seeon.tv/view/(?:\d+)', 
-                        url) or 'seeon' in host 
+        return re.match('http://(www.)?seeon.tv/view/(?:\d+)', url) or 'seeon' in host 
     

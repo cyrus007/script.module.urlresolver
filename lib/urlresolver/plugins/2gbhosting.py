@@ -20,14 +20,12 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
-import urllib2
+import re, urllib2
 from urlresolver import common
-import os
 
 class TwogbhostingResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
-    name = "2gbhosting"
+    name = "2gb-hosting"
 
 
     def __init__(self):
@@ -49,15 +47,15 @@ class TwogbhostingResolver(Plugin, UrlResolver, PluginSettings):
         r = re.search('<input type="hidden" name="k" value="(.+?)" />', html)
         if r:
             sid = r.group(1)
-            common.addon.log_debug('eg-hosting: found k' + sid)
+            common.addon.log_debug(self.name + ': found k' + sid)
         else:
-            common.addon.log_error('2gb-hosting: Could not find k')
+            common.addon.log_error(self.name + ': Could not find k')
             return False
         try:
             data = { 'k' : sid,'submit' : 'Click Here To Continue', }
             html = self.net.http_POST(web_url, data).content
         except urllib2.URLError, e:
-            common.addon.log_error('2gbhosting: got http error %d fetching %s' %
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                     (e.code, web_url))
             return False
 
@@ -66,9 +64,9 @@ class TwogbhostingResolver(Plugin, UrlResolver, PluginSettings):
             url_part4, stream_host, ext, url_part2, url_part1 = r.groups()
             stream_url = 'http://%s.2gb-hosting.com/files/%s/%s/2gb/%s.%s' % (
                              stream_host, url_part1, url_part2, url_part4, ext)
-            common.addon.log_debug('2gbhosting: streaming url ' + stream_url)
+            common.addon.log_debug(self.name + ': streaming url ' + stream_url)
         else:
-            common.addon.log_error('2gbhosting: stream_url not found')
+            common.addon.log_error(self.name + ': stream_url not found')
             return False
 
         return stream_url
@@ -87,6 +85,5 @@ class TwogbhostingResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return (re.match('http://(www.)?2gb-hosting.com/videos/' +
-                         '[0-9A-Za-z]+/[0-9a-zA-Z]+.*', url) or
-                         '2gb-hosting' in host)
+        return (re.match('http://(www.)?2gb-hosting.com/videos/[0-9A-Za-z]+/[0-9a-zA-Z]+.*', url) or
+                         self.name in host)

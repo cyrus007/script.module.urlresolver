@@ -20,13 +20,9 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import urllib2
+import re, urllib2
 from urlresolver import common
 from lib import jsunpack
-
-# Custom imports
-import re
-
 
 
 class SharefilesResolver(Plugin, UrlResolver, PluginSettings):

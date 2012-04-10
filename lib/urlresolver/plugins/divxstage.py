@@ -20,8 +20,7 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
-import urllib2
+import re, urllib2
 from urlresolver import common
 
 class DivxstageResolver(Plugin, UrlResolver, PluginSettings):
@@ -39,7 +38,7 @@ class DivxstageResolver(Plugin, UrlResolver, PluginSettings):
         try:
             html = self.net.http_GET(web_url).content
         except urllib2.URLError, e:
-            common.addon.log_error('Divxstage: got http error %d fetching %s' %
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                    (e.code, web_url))
             return False
 
@@ -56,7 +55,7 @@ class DivxstageResolver(Plugin, UrlResolver, PluginSettings):
                 try:
                     html = self.net.http_GET(player_url).content
                 except urllib2.URLError, e:
-                    common.addon.log_error('Divxstage: got http error %d fetching %s' %
+                    common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                         (e.code, web_url))
                     return False
                 r = re.search('url=(.+?)&', html)
@@ -86,5 +85,4 @@ class DivxstageResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match('http://(www.)?divxstage.eu/' +
-                        'video/[0-9A-Za-z]+', url) or 'divxstage' in host
+        return re.match('http://(www.)?divxstage.eu/video/[0-9A-Za-z]+', url) or self.name in host

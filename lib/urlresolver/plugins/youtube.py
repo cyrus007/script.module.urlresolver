@@ -17,8 +17,6 @@
 """
 
 import re
-from t0mm0.common.net import Net
-import urllib2
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
@@ -34,8 +32,7 @@ class YoutubeResolver(Plugin, UrlResolver, PluginSettings):
 
     def get_media_url(self, host, media_id):
         #just call youtube addon
-        plugin = 'plugin://plugin.video.youtube/?action=play_video&videoid=' +\
-                 media_id
+        plugin = 'plugin://plugin.video.youtube/?action=play_video&videoid=' + media_id
         return plugin
 
 
@@ -59,8 +56,8 @@ class YoutubeResolver(Plugin, UrlResolver, PluginSettings):
         
         
     def valid_url(self, url, host):
-        return re.match('http://(((www.)?youtube.+?(v|embed)(=|/))|' +
-                        'youtu.be/)[0-9A-Za-z_\-]+', 
+        print url
+        return re.match('https?://(((www.)?youtube.+?|/(v|embed)(=|/))|youtu.be/)[0-9A-Za-z_\-]+', 
                         url) or 'youtube' in host or 'youtu.be' in host
 
     def get_settings_xml(self):

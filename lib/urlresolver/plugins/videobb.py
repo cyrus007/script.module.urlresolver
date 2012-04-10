@@ -1,6 +1,5 @@
-import re
+import re, urllib2
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver import common
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
@@ -103,9 +102,7 @@ class VideobbResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match('http://(www.)?videobb.com/' +
-                        '(e/|video/|watch_video.php\?v=)' +
-                        '[0-9A-Za-z]+', url) or 'videobb' in host
+        return re.match('http://(www.)?videobb.com/(e/|video/|watch_video.php\?v=)[0-9A-Za-z]+', url) or self.name in host
 
     
     def get_settings_xml(self):

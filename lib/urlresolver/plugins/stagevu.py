@@ -21,14 +21,11 @@ from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
 import re
-import urllib2
-from urlresolver import common
-import os
+
 
 class StagevuResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
     name = "stagevu"
-
 
     def __init__(self):
         p = self.get_setting('priority') or 100
@@ -59,6 +56,5 @@ class StagevuResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return (re.match('http://(www.)?stagevu.com/video/' +
-                         '[0-9A-Za-z]+', url) or
-                         'stagevu' in host)
+        return (re.match('http://(www.)?stagevu.com/video/[0-9A-Za-z]+', url) or
+                         self.name in host)

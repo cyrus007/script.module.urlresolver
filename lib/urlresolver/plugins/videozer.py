@@ -20,18 +20,16 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import urllib2
+import re, urllib2
 from urlresolver import common
 
 # Custom imports
-import re
 from base64 import b64decode
 from binascii import unhexlify
 try:
   from json import loads
 except ImportError:
   from simplejson import loads
-
 
 
 class VideozerResolver(Plugin, UrlResolver, PluginSettings):

@@ -20,10 +20,8 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
-import urllib2
+import re, os, urllib2
 from urlresolver import common
-import os
 
 class OneeightyuploadResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
@@ -37,7 +35,7 @@ class OneeightyuploadResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def get_media_url(self, host, media_id):
-        print '180upload: in get_media_url %s %s' % (host, media_id)
+        common.addon.log_error(self.name + ': in get_media_url %s %s' % (host, media_id))
         web_url = self.get_url(host, media_id)
         html = self.net.http_GET(web_url).content
 
@@ -48,18 +46,18 @@ class OneeightyuploadResolver(Plugin, UrlResolver, PluginSettings):
         html = self.net.http_POST(web_url, form_data=form_values).content
         match = re.search('<span style="background:#f9f9f9;border:1px dotted #bbb;padding:7px;">.+?<a href="(.+?)">', html,re.DOTALL)
         if not match:
-            print 'could not find video'
+            common.addon.log_error(self.name + ': could not find video.')
             return False
         return match.group(1)
     
 
     def get_url(self, host, media_id):
-        print '180upload: in get_url %s %s' % (host, media_id)
+        common.addon.log_error(self.name + ': in get_url %s %s' % (host, media_id))
         return 'http://www.180upload.com/%s' % media_id 
         
         
     def get_host_and_id(self, url):
-        print '180upload: in get_host_and_id %s' % (url)
+        common.addon.log_error(self.name + ': in get_host_and_id %s' % (url))
 
         r = re.search('http://(.+?)/embed-([\w]+)-', url)
         if r:
@@ -73,6 +71,4 @@ class OneeightyuploadResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return (re.match('http://(www.)?180upload.com/' +
-                         '[0-9A-Za-z]+', url) or
-                         '180upload' in host)
+        return (re.match('http://(www.)?180upload.com/[0-9A-Za-z]+', url) or self.name in host)

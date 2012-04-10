@@ -20,11 +20,8 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import urllib2
+import re, urllib2
 from urlresolver import common
-
-# Custom imports
-import re
 
 
 class GorillavidResolver(Plugin, UrlResolver, PluginSettings):
@@ -36,7 +33,7 @@ class GorillavidResolver(Plugin, UrlResolver, PluginSettings):
         self.priority = int(p)
         self.net = Net()
         #e.g. http://gorillavid.com/vb80o1esx2eb
-        self.pattern = 'http://((?:www.)?gorillavid.com)/([0-9a-zA-Z]+)'
+        self.pattern = 'http://((?:www.)?gorillavid.(?:in|com))/([0-9a-zA-Z]+)'
 
 
     def get_media_url(self, host, media_id):
@@ -58,7 +55,7 @@ class GorillavidResolver(Plugin, UrlResolver, PluginSettings):
             #print html
 
         except urllib2.URLError, e:
-            common.addon.log_error('gorillavid: got http error %d fetching %s' %
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                   (e.code, web_url))
             return False
 

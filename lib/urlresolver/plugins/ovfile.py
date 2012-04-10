@@ -20,17 +20,15 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
-import urllib2
+import os, re, urllib2
 from urlresolver import common
-import os, xbmcgui
+import xbmcgui
 from vidxden import unpack_js
 
 
 class OvfileResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
-    name = "ovile"
-
+    name = "ovfile"
 
     def __init__(self):
         p = self.get_setting('priority') or 100
@@ -95,6 +93,5 @@ class OvfileResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return (re.match('http://(www.)?ovfile.com/' +
-                         '[0-9A-Za-z]+', url) or
-                         'ovfile' in host)
+        return (re.match('http://(www.)?ovfile.com/[0-9A-Za-z]+', url) or
+                         self.name in host)

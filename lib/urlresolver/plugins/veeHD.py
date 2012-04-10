@@ -16,17 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os
-import random
-import re
+import os, random, re
 import urllib, urllib2
-import xbmc
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import SiteAuth
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
 from urlresolver import common
-import xbmc,xbmcplugin,xbmcgui,xbmcaddon, datetime
 import cookielib
 from t0mm0.common.net import Net
 
@@ -59,7 +55,7 @@ class veeHDResolver(Plugin, UrlResolver, SiteAuth, PluginSettings):
 
         fragment = re.search('playeriframe".+?attr.+?src : "(.+?)"', html)
         frag = 'http://%s%s'%(host,fragment.group(1))
-        xbmc.log(frag)
+        print frag
         try:
             html = self.net.http_GET(frag).content
         except urllib2.URLError, e:
@@ -95,11 +91,10 @@ class veeHDResolver(Plugin, UrlResolver, SiteAuth, PluginSettings):
             return False
 
     def valid_url(self, url, host):
-
-        if self.get_setting('login') == 'false':
+        login = self.get_setting('login')
+        if login == 'false' or login == '':
             return False
-        return re.match('http://veehd.com/video/[0-9A-Za-z]+', url) or \
-               self.name in host
+        return re.match('http://veehd.com/video/[0-9A-Za-z]+', url) or self.name in host
 
     #SiteAuth methods
     def login(self):
@@ -125,5 +120,4 @@ class veeHDResolver(Plugin, UrlResolver, SiteAuth, PluginSettings):
         
     #to indicate if this is a universal resolver
     def isUniversal(self):
-        
         return True

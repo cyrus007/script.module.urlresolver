@@ -22,9 +22,8 @@ Site: http://www.movshare.net
 movshare hosts both avi and flv videos
 """
 
-import re
+import re, urllib2
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
@@ -81,5 +80,4 @@ class MovshareResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match('http://(?:www.)?movshare.net/video/',
-                        url) or 'movshare' in host
+        return re.match('http://(?:www.)?movshare.net/video/', url) or self.name in host

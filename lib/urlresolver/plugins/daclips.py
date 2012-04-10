@@ -20,11 +20,8 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import urllib2
+import re, urllib2
 from urlresolver import common
-
-# Custom imports
-import re
 
 
 class DaclipsResolver(Plugin, UrlResolver, PluginSettings):
@@ -40,7 +37,6 @@ class DaclipsResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def get_media_url(self, host, media_id):
-        
         web_url = self.get_url(host, media_id)
         #print web_url
         
@@ -61,13 +57,12 @@ class DaclipsResolver(Plugin, UrlResolver, PluginSettings):
             print html
 
         except urllib2.URLError, e:
-            common.addon.log_error('daclips: got http error %d fetching %s' %
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                   (e.code, web_url))
             return False
 
         
         r = re.search('file:"(.+?)"', html)
-
         if r:
             return r.group(1)+'.flv'
 

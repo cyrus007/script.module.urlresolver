@@ -20,8 +20,7 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
-import urllib2, urllib
+import re, urllib2, urllib
 from urlresolver import common
 
 class DailymotionResolver(Plugin, UrlResolver, PluginSettings):
@@ -39,7 +38,7 @@ class DailymotionResolver(Plugin, UrlResolver, PluginSettings):
         try:
             link = self.net.http_GET(web_url).content
         except urllib2.URLError, e:
-            common.addon.log_error(self.name + '- got http error %d fetching %s' %
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
                                    (e.code, web_url))
             return False
         sequence = re.compile('"sequence",  "(.+?)"').findall(link)
