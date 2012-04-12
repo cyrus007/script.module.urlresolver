@@ -51,12 +51,11 @@ class YoutubeResolver(Plugin, UrlResolver, PluginSettings):
         if video_id:
             return ('youtube.com', video_id)
         else:
-            common.addon.log_error('youtube: video id not found')
+            common.addon.log_error(self.name + ': video id not found')
             return False
         
         
     def valid_url(self, url, host):
-        print url
         return re.match('https?://(((www.)?youtube.+?|/(v|embed)(=|/))|youtu.be/)[0-9A-Za-z_\-]+', 
                         url) or 'youtube' in host or 'youtu.be' in host
 

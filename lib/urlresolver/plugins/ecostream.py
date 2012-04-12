@@ -32,7 +32,7 @@ class EcostreamResolver(Plugin, UrlResolver, PluginSettings):
         p = self.get_setting('priority') or 100
         self.priority = int(p)
         self.net = Net()
-        self.pattern = 'http://((?:www.)?ecostream.tv)/(?:stream|embed)?/([0-9a-zA-Z]+).html'
+        self.pattern = 'http://(?:www.)?(ecostream.tv)/(?:stream|embed)?/([0-9a-zA-Z]+).html'
 
 
     def get_media_url(self, host, media_id):

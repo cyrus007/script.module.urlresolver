@@ -33,8 +33,7 @@ class VeohResolver(Plugin, UrlResolver, PluginSettings):
         self.net = Net()
 
     def get_media_url(self, host, media_id):
-        print 'veoh resolver: in get_media_url'
-        print 'host %s media_id %s' %(host, media_id)
+        print self.name + ': host %s media_id %s' %(host, media_id)
 
         html = self.net.http_GET("http://www.veoh.com/iphone/views/watch.php?id=" + media_id + "&__async=true&__source=waBrowse").content
         if not re.search('This video is not available on mobile', html):
@@ -43,15 +42,11 @@ class VeohResolver(Plugin, UrlResolver, PluginSettings):
                 return r[0]
 
         url = 'http://www.veoh.com/rest/video/'+media_id+'/details'
-        print 'url is %s' %url
         html = self.net.http_GET(url).content
         file = re.compile('fullPreviewHashPath="(.+?)"').findall(html)
-
         if len(file) == 0:
-            print 'coult not obtain video url'
             return False
 
-        print 'video link is %s' % file[0]
         return file[0]
 
     def get_url(self, host, media_id):
@@ -61,14 +56,15 @@ class VeohResolver(Plugin, UrlResolver, PluginSettings):
     def get_host_and_id(self, url):
         r = None
         video_id = None
-        print 'veoh resolver: in get_host_and_id %s ' % url
-        if re.search('permalinkId=', url):
-            r = re.compile('veoh.com.+?permalinkId=(\w+)&*.*$').findall(url)
-        elif re.search('watch/', url):
-            r = re.compile('watch/(.+)').findall(url)
+        if 'permalinkId=' in url:
+            r = re.match('veoh.com.+?permalinkId=(\w+)&*.*$', url)
+        elif 'watch/' in url:
+            r = re.match('(?:.+)watch/(.+)', url)
+        elif 'videos/' in url:
+            r = re.match('(?:.+)videos/(.+)', url)
             
-        if r is not None and len(r) > 0:
-            video_id = r[0]
+        if r:
+            video_id = r.groups()[-1]
         if video_id:
             return ('veoh.com', video_id)
         else:
@@ -76,7 +72,7 @@ class VeohResolver(Plugin, UrlResolver, PluginSettings):
             return False
 
     def valid_url(self, url, host):
-        return re.search('www.veoh.com/.+?watch/.+',url) or re.search('www.veoh.com/.+?permalinkId=.+',url) or self.name in host
+        return re.search('www.veoh.com/.+?(watch|videos)?/.+',url) or re.search('www.veoh.com/.+?permalinkId=.+',url) or self.name in host
 
     def get_settings_xml(self):
         xml = PluginSettings.get_settings_xml(self)

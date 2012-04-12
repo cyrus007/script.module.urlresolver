@@ -101,6 +101,16 @@ class HostedMediaFile:
         Returns the host of this :class:`HostedMediaFile`.
         '''
         return self._host
+
+    def get_name(self):
+        '''
+        Returns one of the names of resolvers
+        '''
+        if self._resolvers:
+            name = self._resolvers[0].name
+            return name.split('/')[0]           #incase names are like name1/name2/name3
+        else:
+            return 'UNKNOWN'
         
     def get_media_id(self):
         '''

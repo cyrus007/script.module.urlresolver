@@ -38,16 +38,14 @@ class DivxstageResolver(Plugin, UrlResolver, PluginSettings):
         try:
             html = self.net.http_GET(web_url).content
         except urllib2.URLError, e:
-            common.addon.log_error(self.name + ': got http error %d fetching %s' %
-                                   (e.code, web_url))
+            common.addon.log_error(self.name + ': got http error %d fetching %s' % (e.code, web_url))
             return False
 
         r = re.search('<param name="src" value="(.+?)"', html)
         if r:
             stream_url = r.group(1)
         else:
-            message ='Divxstage: 1st attempt at finding the stream_url failed'
-            common.addon.log_debug(message)
+            common.addon.log_debug(self.name + ': 1st attempt at finding the stream_url failed')
             r = re.search('flashvars.filekey="(.+)"', html)
             if r:
                 file_key = r.group(1)
@@ -62,12 +60,10 @@ class DivxstageResolver(Plugin, UrlResolver, PluginSettings):
                 if r:
                     stream_url = r.group(1)
                 else:
-                    message ='Divxstage: attempt at finding the stream_url failed'
-                    common.addon.log_debug(message)
+                    common.addon.log_debug(self.name + ': attempt at finding the stream_url failed')
                     return False
             else:
-                message ='Divxstage: attempt at finding the filekey failed'
-                common.addon.log_debug(message)
+                common.addon.log_debug(self.name + ': attempt at finding the filekey failed')
                 return False
         return stream_url
 

@@ -34,20 +34,21 @@ except ImportError:
 
 class VideozerResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
-    name = "videozer"
+    name = "videobb/videozer"
 
     def __init__(self):
         p = self.get_setting('priority') or 100
         self.priority = int(p)
         self.net = Net()
-        self.pattern = 'http://((?:www.)?videozer.com)/(?:embed|video)?/([0-9a-zA-Z]+)'
+        self.pattern = '' 
 
 
     def get_media_url(self, host, media_id):
-
         #grab url for this video
-        settings_url = "http://www.videozer.com/" + \
-            "player_control/settings.php?v=%s" % media_id
+        if 'videozer' in host:
+            settings_url = "http://www.videozer.com/player_control/settings.php?v=%s" % media_id
+        elif 'videobb' in host:
+            settings_url = "http://www.videobb.com/player_control/settings.php?v=%s" % media_id
 
         try:
             html = self.net.http_GET(settings_url).content
@@ -57,10 +58,13 @@ class VideozerResolver(Plugin, UrlResolver, PluginSettings):
             return False
 
         #find highest quality URL
-        max_res = [240, 480, 99999][int(self.get_setting('q'))]
+        if self.get_setting('q') == '':
+            max_res = 480
+        else:
+            max_res = [240, 480, 99999][int(self.get_setting('q'))]
         r = re.finditer('"l".*?:.*?"(.+?)".+?"u".*?:.*?"(.+?)"', html)
         chosen_res = 0
-        stream_url = False
+        sMediaLink = ''
         
         if r:
             for match in r:
@@ -69,10 +73,10 @@ class VideozerResolver(Plugin, UrlResolver, PluginSettings):
                 elif (res == 'SD') : res = 480
                 else : res = 720
                 if res > chosen_res and res <= max_res:
-                    stream_url_part1 = url.decode('base-64')
+                    sMediaLink = url.decode('base-64')
                     chosen_res = res
         else:
-            common.addon.log_error('videozer: stream url part1 not found')
+            common.addon.log_error(self.name + ': stream url part1 not found')
             return False
 
         # Try to load the datas from html. This data should be json styled.
@@ -106,12 +110,15 @@ class VideozerResolver(Plugin, UrlResolver, PluginSettings):
         
         sLink = sLink + "start=0"
 
-        sMediaLink = stream_url_part1 + '&' + sLink
+        stream_url = sMediaLink + '&' + sLink
 
-        return sMediaLink
+        return stream_url
 
     def get_url(self, host, media_id):
+        if 'videozer' in host:
             return 'http://www.videozer.com/video/%s' % (media_id)
+        elif 'videobb' in host:
+            return 'http://www.videobb.com/video/%s' % (media_id)
 
     def get_host_and_id(self, url):
         r = re.search(self.pattern, url)
@@ -122,7 +129,13 @@ class VideozerResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match(self.pattern, url) or self.name in host
+        if 'videozer' in url or 'videozer' in host:
+            self.pattern = 'http://(?:www.)?(videozer.com)/(?:embed|video)?/([0-9a-zA-Z]+)'
+        elif 'videobb' in url or 'videobb' in host:
+            self.pattern = 'http://(?:www.)?(videobb.com)/(?:e/|video/|watch_video.php\?v=)([0-9A-Za-z]+)'
+        else:
+            return False
+        return re.match(self.pattern, url) or 'videozer' in host or 'videobb' in host
 
     def get_settings_xml(self):
         xml = PluginSettings.get_settings_xml(self)

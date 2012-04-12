@@ -31,7 +31,7 @@ class ZshareResolver(Plugin, UrlResolver, PluginSettings):
         p = self.get_setting('priority') or 100
         self.priority = int(p)
         self.net = Net()
-        self.pattern ='http://((?:www.)?zshare.net)/video/([0-9A-Za-z]+)'
+        self.pattern ='http://((?:www.)?zshare.(?:net|cc))/vid(?:eo)?/(?:\?l=)?([0-9A-Za-z]+)'
 
 
     def get_media_url(self, host, media_id):

@@ -26,7 +26,7 @@ import xbmcgui
 
 class VideoweedResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
-    name = "videoweed.es"
+    name = "videoweed"
 
     def __init__(self):
         p = self.get_setting('priority') or 100
@@ -79,7 +79,7 @@ class VideoweedResolver(Plugin, UrlResolver, PluginSettings):
         
         
     def get_host_and_id(self, url):
-        r = re.search('//(?:embed.)?(.+?)/(?:video/|embed.php\?v=)' + 
+        r = re.search('//(?:embed.)?(.+?)/(?:video/|file/|embed.php\?v=)' + 
                       '([0-9a-z]+)', url)
         if r:
             return r.groups()
@@ -88,6 +88,6 @@ class VideoweedResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def valid_url(self, url, host):
-        return re.match('http://(www.|embed.)?videoweed.(?:es|com)/(video/|embed.php\?)' +
+        return re.match('http://(www.|embed.)?videoweed.(?:es|com)/(video/|file/|embed.php\?)' +
                         '(?:[0-9a-z]+|width)', url) or self.name in host
 
